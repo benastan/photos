@@ -7,7 +7,7 @@ h1= @directory[1].to_s
       figcaption
         = photo.basename
     div
-      - [ '1028x768', 'Originals' ].each do |size|
+      - [ '1080x768', 'Originals' ].each do |size|
         ' &nbsp;
-        a href=photo.sample(size).relative_path('/photos')
+        a href=photo.sample(size, generate: false).relative_path('/photos')
           = size

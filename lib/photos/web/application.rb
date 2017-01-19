@@ -25,8 +25,12 @@ module Photos
       get '/photos/*' do
         location = env['PATH_INFO'].gsub(/^\/photos\//, '')
         @file_system = LocalFileSystem.new
+        photo = @file_system.find_photo(location)
+
+        photo.create if !photo.exist?
+        
         headers['Content-Type'] = 'image/jpg'
-        @file_system.pathname.join(location).read
+        photo.content
       end
     end
   end

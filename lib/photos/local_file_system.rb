@@ -9,6 +9,13 @@ module Photos
       fetch_directory(:Originals)
     end
 
+    def find_photo(path)
+      photo_pathname = self.pathname.join(path)
+      photo_uri = @uri.dup
+      photo_uri.path = photo_pathname.to_s
+      Photo.new(photo_uri)
+    end
+    
     def directory(dirname)
       @directories[dirname]
     end
