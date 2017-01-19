@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require '../boot'
+Photos::Cli.perform

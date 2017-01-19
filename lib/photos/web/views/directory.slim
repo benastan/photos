@@ -1,0 +1,13 @@
+h1= @directory[1].to_s
+
+- @photos.each do |photo|
+  div
+    figure
+      img src=photo.sample('200x200').relative_path('/photos')
+      figcaption
+        = photo.basename
+    div
+      - [ '1028x768', 'Originals' ].each do |size|
+        ' &nbsp;
+        a href=photo.sample(size).relative_path('/photos')
+          = size

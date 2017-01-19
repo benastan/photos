@@ -1,0 +1,4 @@
+ul
+  - @file_system.directory(:Originals).each do |directory|
+    li
+      a href="/directories/#{directory[1].to_s}"= directory[1].to_s
