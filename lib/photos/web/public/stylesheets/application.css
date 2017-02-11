@@ -1,0 +1,16 @@
+.spacing-below {
+  margin-bottom: .75em;
+}
+
+.spacing-above {
+  margin-top: .75em;
+}
+
+.spacing-below-double {
+  margin-bottom: 1.5em;
+}
+
+.spacing-above-double {
+  margin-top: 1.5em;
+}
+

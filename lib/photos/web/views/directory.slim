@@ -1,13 +1,58 @@
-h1= @directory[1].to_s
+h1.text-center= @directory[1].to_s
 
-- @photos.each do |photo|
-  div
-    figure
-      img src=photo.sample('200x200').relative_path('/photos')
-      figcaption
-        = photo.basename
-    div
-      - [ '1080x768', 'Originals' ].each do |size|
-        ' &nbsp;
-        a href=photo.sample(size, generate: false).relative_path('/photos')
-          = size
+- if params[:loaded].nil?
+  #fileList data-file-list=@sources
+    ' Loading...
+
+  javascript:
+    function pageLoaded() {
+      new Preloader(fileList).preload(function() {
+        window.location = '?destination=#{params[:destination]}&loaded=true'
+      });
+    }
+
+- else
+  table
+    - @photos.each_with_index do |photo, i|
+      div class="#{'hidden' unless i == 0}" style='text-align: center;' data-gallery-index="#{i}"
+        img src="/photos?path=#{photo.sample('1080x768').relative_path}" style='height: 80vz; width: auto;'
+        .row style='height: 10vz'
+          .col-sm-2 style='text-align: right;'
+            a href='javascript:void(0)' data-gallery-advance='-1' data-bind-key='37:click' Previous
+
+          .col-sm-8
+            - if params[:destination]
+              div
+                form data-remote='' action="/photos/move" method='post' data-bind-key='13:submit'
+                  input type='hidden' value=photo.relative_path name='path'
+                  input type='hidden' value=params[:destination] name='destination'
+                  input type='submit' value="Move to #{params[:destination]}"
+            ' Image #{i + 1} of #{@photos.length}
+
+          .col-sm-2
+            a href='javascript:void(0)' data-gallery-advance='1' data-bind-key='39:click' Next
+
+  javascript:
+    function pageLoaded() {
+      new Gallery();
+    }
+
+/    tr
+/  td
+/    figure
+/      img src="/photos?path=#{photo.sample('200x200').relative_path}"
+/    figcaption= photo.basename
+/
+/  td
+/    - [ '1080x768', '500x500', 'Originals' ].each do |size|
+/      p
+/        a href="/photos?path=#{photo.sample(size, generate: false).relative_path}"
+/          = size
+/tr
+/  td colspan='2'
+/    - if params[:destination]
+/      div
+/        form action="/photos/move" method='post'
+/          input type='hidden' value=photo.relative_path name='path'
+/          input type='hidden' value=params[:destination] name='destination'
+/          input type='submit' value="Move to #{params[:destination]}"

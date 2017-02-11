@@ -1,5 +1,7 @@
 module Photos
   class Photo
+    attr_reader :pathname
+    
     def initialize(uri)
       @uri = uri
       @pathname = Pathname(uri.path)
@@ -41,7 +43,7 @@ module Photos
       if original? || !original.exist?
         raise ArgumentError.new('Original does not exists')
       else
-        original.sample(version)
+        original.sample(version, resize: true, options: ['-quality', '70'], cache: false)
       end
     end
     
@@ -57,17 +59,22 @@ module Photos
       local? && dirname.join('..').basename.to_s == 'Originals'
     end
     
-    def sample(size, generate: true)
+    def sample(size, cache: true, generate: true, resize: true, options: nil)
+      options ||= []
+      options = options.dup
       destination = Pathname(ENV['LOCAL_DIRECTORY']).join(size, dirname.basename, basename)
       resized_uri = @uri.dup
       resized_uri.path = destination.to_s
       
-      if !destination.exist? && generate
+      if (!destination.exist? && generate) || !cache
         FileUtils.mkdir_p(destination.dirname)
         
-        @shell.system!(
-          'convert', '-sample', size, @pathname.to_s, destination.to_s
-        )
+        operation = resize ? '-resize' : '-sample'
+        options = options.unshift(operation, size)
+        options = options.unshift('convert')
+        options = options.push(@pathname.to_s, destination.to_s)
+        
+        @shell.system!(*options)
       end
       
       Photo.new(resized_uri)

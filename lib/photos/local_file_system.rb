@@ -10,7 +10,7 @@ module Photos
     end
 
     def find_photo(path)
-      photo_pathname = self.pathname.join(path)
+      photo_pathname = self.pathname.join(path.gsub(/^\//, ''))
       photo_uri = @uri.dup
       photo_uri.path = photo_pathname.to_s
       Photo.new(photo_uri)
@@ -35,8 +35,8 @@ module Photos
     end
     
     def each(dirname)
-      directory(dirname).each do |group|
-        Dir.glob(group[0].join('*.JPG')).each do |path|
+      directory(dirname).reverse.each do |group|
+        Dir.glob(group[0].join('*.JPG')).reverse.each do |path|
           uri = URI("file://#{path}")
           photo = Photo.new(uri)
           yield(photo)

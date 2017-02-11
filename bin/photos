@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
-require '../boot'
+require './boot'
 Photos::Cli.perform

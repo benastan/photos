@@ -1,4 +1,3 @@
-ul
-  - @file_system.directory(:Originals).each do |directory|
-    li
-      a href="/directories/#{directory[1].to_s}"= directory[1].to_s
+ul.list-group style='max-height: 60vh; overflow-y: auto;'
+  - @directories.each_with_index do |directory, index|
+    a.list-group-item data=directory_link_data(index) class="#{'active' if index == @directory_index}" href="/directories/#{directory[1].to_s}?destination=#{params[:destination]}"= directory[1].to_s

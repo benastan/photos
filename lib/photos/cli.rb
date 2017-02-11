@@ -26,7 +26,6 @@ module Photos
           [:done, 'Done'],
         ]
     
-    
         loop do
           menu = View::Select.new('What next?', menu_options) { |option| option[1] }
       
